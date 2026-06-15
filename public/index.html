@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#C8390A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Pad Thai Cafe — Loyalty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --chili:       #C8390A;
+  --chili-dark:  #9E2D08;
+  --chili-light: #FDEEE8;
+  --turmeric:    #F4A822;
+  --cream:       #FDF6EC;
+  --dark:        #1A1209;
+  --mid:         #7A6355;
+  --light:       #EDE0CE;
+  --green:       #2D6A4F;
+  --green-bg:    #E8F5EE;
+  --white:       #FFFFFF;
+  --shadow:      0 4px 24px rgba(26,18,9,.10);
+  --radius:      16px;
+}
+
+/* ─── BASE ───────────────────────────────────────────── */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Sarabun', sans-serif;
+  background: var(--cream);
+  color: var(--dark);
+  min-height: 100dvh;
+  overscroll-behavior: none;
+}
+
+/* ─── SCREENS ────────────────────────────────────────── */
+.screen { display: none; min-height: 100dvh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ─── TOPBAR ─────────────────────────────────────────── */
+.topbar {
+  background: var(--chili);
+  color: white;
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+  flex-shrink: 0;
+}
+.topbar-dark { background: var(--dark); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; }
+.topbar-sub { font-size: 11px; opacity: .7; margin-top: 2px; }
+.topbar-btn {
+  background: rgba(255,255,255,.18); border: none; color: white;
+  border-radius: 20px; padding: 6px 14px;
+  font-family: 'Sarabun', sans-serif; font-size: 13px; cursor: pointer;
+  transition: background .2s;
+}
+.topbar-btn:hover { background: rgba(255,255,255,.3); }
+
+/* ─── BUTTONS ────────────────────────────────────────── */
+.btn {
+  display: block; width: 100%; border: none; border-radius: var(--radius);
+  padding: 15px 20px; font-family: 'Sarabun', sans-serif;
+  font-size: 16px; font-weight: 600; cursor: pointer;
+  transition: opacity .2s, transform .1s;
+  text-align: center;
+}
+.btn:active { transform: scale(.98); }
+.btn-primary { background: var(--chili); color: white; }
+.btn-primary:hover { background: var(--chili-dark); }
+.btn-secondary {
+  background: transparent; color: var(--chili);
+  border: 1.5px solid var(--chili);
+}
+.btn-ghost {
+  background: transparent; color: rgba(255,255,255,.7);
+  border: 1.5px solid rgba(255,255,255,.3); color: rgba(255,255,255,.85);
+}
+.btn-ghost:hover { border-color: white; color: white; }
+.btn-gold { background: var(--turmeric); color: var(--dark); }
+.btn + .btn { margin-top: 12px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* ─── INPUTS ─────────────────────────────────────────── */
+.field { margin-bottom: 20px; }
+.field label { display: block; font-size: 12px; font-weight: 700; color: var(--mid); letter-spacing: .8px; text-transform: uppercase; margin-bottom: 8px; }
+.field input {
+  width: 100%; background: white; border: 1.5px solid var(--light);
+  border-radius: 12px; padding: 14px 16px;
+  font-family: 'Sarabun', sans-serif; font-size: 16px; color: var(--dark);
+  outline: none; transition: border-color .2s;
+  -webkit-appearance: none;
+}
+.field input:focus { border-color: var(--chili); }
+.field input::placeholder { color: #C4B5A8; }
+
+/* ─── LANDING ────────────────────────────────────────── */
+#screen-landing {
+  background: linear-gradient(160deg, #1A1209 0%, #3A1A08 55%, #8B2507 100%);
+  align-items: center; justify-content: center;
+  padding: 48px 24px 40px; text-align: center;
+}
+.landing-emoji {
+  font-size: 52px; margin-bottom: 20px;
+  filter: drop-shadow(0 4px 12px rgba(244,168,34,.4));
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.landing-title {
+  font-family: 'Playfair Display', serif; font-size: 34px;
+  color: white; line-height: 1.15; margin-bottom: 10px;
+}
+.landing-sub { color: rgba(255,255,255,.6); font-size: 15px; margin-bottom: 36px; line-height: 1.6; }
+.preview-card {
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px; padding: 22px; width: 100%; max-width: 340px;
+  margin: 0 auto 32px;
+}
+.preview-label { color: var(--turmeric); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
+.preview-dots { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+.preview-dot {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; transition: all .3s;
+}
+.preview-dot.on { background: var(--chili); border-color: var(--chili); }
+.preview-reward { color: rgba(255,255,255,.45); font-size: 12px; }
+.landing-btns { width: 100%; max-width: 340px; }
+.admin-link {
+  margin-top: 16px; color: rgba(255,255,255,.4); font-size: 13px; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px; background: none; border: none;
+}
+.admin-link:hover { color: rgba(255,255,255,.7); }
+
+/* ─── AUTH FORMS ─────────────────────────────────────── */
+.form-wrap { flex: 1; padding: 32px 24px; max-width: 480px; width: 100%; margin: 0 auto; }
+.form-title { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 6px; }
+.form-subtitle { color: var(--mid); font-size: 14px; margin-bottom: 32px; line-height: 1.5; }
+.form-switch { text-align: center; color: var(--mid); font-size: 14px; margin-top: 20px; }
+.form-switch a { color: var(--chili); font-weight: 600; cursor: pointer; text-decoration: none; }
+.error-msg {
+  background: #FEE2E2; color: #991B1B; border-radius: 10px;
+  padding: 12px 14px; font-size: 13px; margin-bottom: 16px; display: none;
+}
+
+/* ─── CUSTOMER HOME ──────────────────────────────────── */
+.scroll-body { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
+
+/* Loyalty Card */
+.loyalty-card {
+  background: linear-gradient(135deg, #C8390A 0%, #7A1E05 100%);
+  border-radius: 20px; padding: 22px; color: white; margin-bottom: 20px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(200,57,10,.35);
+}
+.loyalty-card::after {
+  content: '🍜';
+  position: absolute; right: -12px; bottom: -12px;
+  font-size: 90px; opacity: .08; pointer-events: none;
+}
+.lc-label { font-size: 11px; opacity: .65; letter-spacing: 1px; text-transform: uppercase; }
+.lc-name { font-family: 'Playfair Display', serif; font-size: 22px; margin: 4px 0 20px; }
+.stamps-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 9px; margin-bottom: 14px; }
+.stamp {
+  aspect-ratio: 1; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all .35s cubic-bezier(.34,1.56,.64,1);
+}
+.stamp.filled { background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.6); }
+.stamp.empty { background: rgba(255,255,255,.07); border: 2px solid rgba(255,255,255,.2); }
+.stamp.new-stamp { animation: stampIn .4s cubic-bezier(.34,1.56,.64,1); }
+@keyframes stampIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.lc-progress { font-size: 13px; opacity: .75; }
+.lc-reward-bar {
+  background: rgba(255,255,255,.12); border-radius: 10px;
+  padding: 10px 14px; margin-top: 14px;
+  font-size: 13px; display: flex; align-items: center; gap: 8px;
+}
+.lc-complete { background: var(--turmeric); color: var(--dark); }
+
+/* Action Tiles */
+.section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.tile {
+  background: white; border-radius: 16px; padding: 18px 14px;
+  text-align: center; cursor: pointer; border: 1.5px solid transparent;
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+  box-shadow: var(--shadow);
+}
+.tile:hover { border-color: var(--chili); box-shadow: 0 6px 20px rgba(200,57,10,.12); transform: translateY(-2px); }
+.tile-icon { font-size: 28px; margin-bottom: 8px; }
+.tile-label { font-size: 13px; font-weight: 700; color: var(--dark); }
+.tile-sub { font-size: 11px; color: var(--mid); margin-top: 3px; }
+
+/* History */
+.history-empty { text-align: center; color: var(--mid); padding: 32px 16px; font-size: 14px; line-height: 1.6; }
+.history-item {
+  background: white; border-radius: 14px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(26,18,9,.06);
+}
+.history-icon {
+  width: 38px; height: 38px; border-radius: 10px; background: var(--cream);
+  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.history-text { flex: 1; }
+.history-main { font-size: 14px; font-weight: 600; }
+.history-date { font-size: 12px; color: var(--mid); margin-top: 2px; }
+.badge {
+  font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+  background: var(--green-bg); color: var(--green);
+}
+.badge-reward { background: #FEF3C7; color: #92400E; }
+
+/* ─── QR SCREEN ──────────────────────────────────────── */
+#screen-qr { background: var(--dark); }
+.qr-body {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 32px 24px;
+}
+.qr-hint { color: rgba(255,255,255,.55); font-size: 14px; margin-bottom: 24px; text-align: center; line-height: 1.5; }
+.qr-frame {
+  background: white; border-radius: 20px; padding: 16px;
+  margin-bottom: 20px; width: 240px; height: 240px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+#qrImage { width: 100%; height: 100%; border-radius: 8px; }
+.qr-loading { color: var(--mid); font-size: 14px; }
+.qr-name { font-family: 'Playfair Display', serif; font-size: 22px; color: white; margin-bottom: 6px; }
+.qr-id { color: rgba(255,255,255,.45); font-size: 12px; margin-bottom: 16px; }
+.qr-counter {
+  background: var(--chili); color: white;
+  border-radius: 20px; padding: 9px 22px;
+  font-size: 14px; font-weight: 700;
+}
+.qr-note { color: rgba(255,255,255,.35); font-size: 11px; margin-top: 16px; text-align: center; }
+
+/* ─── ADMIN ──────────────────────────────────────────── */
+#screen-admin { background: #F4F4F6; }
+.admin-body { flex: 1; overflow-y: auto; padding: 20px; }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.stat {
+  background: white; border-radius: 16px; padding: 18px 16px;
+  box-shadow: var(--shadow);
+}
+.stat.featured { background: var(--chili); }
+.stat-n { font-family: 'Playfair Display', serif; font-size: 30px; color: var(--dark); }
+.stat.featured .stat-n { color: white; }
+.stat-l { font-size: 12px; color: var(--mid); margin-top: 3px; }
+.stat.featured .stat-l { color: rgba(255,255,255,.7); }
+
+.admin-scan-btn {
+  background: var(--turmeric); color: var(--dark); border: none;
+  border-radius: var(--radius); padding: 16px 20px; font-size: 16px; font-weight: 700;
+  width: 100%; cursor: pointer; margin-bottom: 24px;
+  font-family: 'Sarabun', sans-serif; letter-spacing: .3px;
+  box-shadow: 0 4px 16px rgba(244,168,34,.35);
+  transition: opacity .2s;
+}
+.admin-scan-btn:hover { opacity: .9; }
+
+.admin-section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; }
+
+.cust-row {
+  background: white; border-radius: 16px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(26,18,9,.06);
+}
+.cust-avatar {
+  width: 42px; height: 42px; border-radius: 50%; background: var(--chili); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; flex-shrink: 0;
+}
+.cust-info { flex: 1; min-width: 0; }
+.cust-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cust-meta { font-size: 11px; color: var(--mid); margin-top: 2px; }
+.mini-bar { display: flex; gap: 3px; margin-top: 6px; flex-wrap: wrap; }
+.mini-dot { width: 11px; height: 11px; border-radius: 50%; }
+.mini-dot.on { background: var(--chili); }
+.mini-dot.off { background: var(--light); }
+.stamp-btn {
+  background: var(--chili); color: white; border: none;
+  border-radius: 10px; padding: 8px 14px; font-size: 13px; font-weight: 700;
+  font-family: 'Sarabun', sans-serif; cursor: pointer; flex-shrink: 0;
+  transition: background .2s;
+}
+.stamp-btn:hover { background: var(--chili-dark); }
+.stamp-btn.full { background: var(--turmeric); color: var(--dark); cursor: default; }
+.stamp-btn.redeem-btn { background: var(--green); }
+
+/* ─── SCAN SCREEN ────────────────────────────────────── */
+#screen-scan { background: var(--dark); }
+.scan-body {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 32px 24px;
+}
+.scan-frame {
+  width: 260px; height: 260px; border: 2px solid var(--turmeric);
+  border-radius: 24px; margin-bottom: 28px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.03); overflow: hidden;
+}
+.corner {
+  position: absolute; width: 22px; height: 22px;
+  border-color: var(--turmeric); border-style: solid;
+}
+.corner.tl { top: 10px; left: 10px; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+.corner.tr { top: 10px; right: 10px; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+.corner.bl { bottom: 10px; left: 10px; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+.corner.br { bottom: 10px; right: 10px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+.scan-line {
+  position: absolute; width: 75%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--turmeric), transparent);
+  animation: scanLine 1.8s ease-in-out infinite;
+}
+@keyframes scanLine {
+  0%,100% { top: 15%; }
+  50% { top: 78%; }
+}
+.scan-icon { font-size: 38px; opacity: .25; }
+.scan-hint { color: rgba(255,255,255,.6); font-size: 14px; text-align: center; margin-bottom: 20px; line-height: 1.6; }
+.scan-field {
+  width: 100%; max-width: 300px;
+  background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.2);
+  border-radius: 14px; padding: 14px 18px; color: white;
+  font-family: 'Sarabun', sans-serif; font-size: 16px;
+  text-align: center; outline: none; margin-bottom: 14px;
+  transition: border-color .2s;
+}
+.scan-field:focus { border-color: var(--turmeric); }
+.scan-field::placeholder { color: rgba(255,255,255,.3); }
+.scan-confirm {
+  width: 100%; max-width: 300px; background: var(--turmeric);
+  color: var(--dark); border: none; border-radius: 14px; padding: 15px;
+  font-family: 'Sarabun', sans-serif; font-size: 16px; font-weight: 700;
+  cursor: pointer; transition: opacity .2s;
+}
+.scan-confirm:hover { opacity: .9; }
+
+/* ─── RESULT CARD (after scan) ───────────────────────── */
+.scan-result {
+  display: none; width: 100%; max-width: 320px;
+  background: white; border-radius: 20px; padding: 24px;
+  text-align: center; animation: slideUp .3s ease;
+}
+.scan-result.visible { display: block; }
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.sr-emoji { font-size: 44px; margin-bottom: 12px; }
+.sr-name { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--dark); margin-bottom: 4px; }
+.sr-detail { color: var(--mid); font-size: 14px; margin-bottom: 16px; }
+.sr-stamps { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 16px; }
+.sr-dot { width: 18px; height: 18px; border-radius: 50%; }
+.sr-dot.on { background: var(--chili); }
+.sr-dot.off { background: var(--light); }
+.sr-btn {
+  background: var(--chili); color: white; border: none;
+  border-radius: 12px; padding: 12px 24px;
+  font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; width: 100%; margin-top: 8px;
+}
+
+/* ─── ADMIN LOGIN ─────────────────────────────────────── */
+#screen-admin-login { background: var(--dark); }
+.admin-login-wrap {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 32px 24px;
+}
+.admin-login-icon { font-size: 48px; margin-bottom: 16px; }
+.admin-login-title { font-family: 'Playfair Display', serif; font-size: 26px; color: white; margin-bottom: 6px; }
+.admin-login-sub { color: rgba(255,255,255,.5); font-size: 14px; margin-bottom: 32px; }
+.admin-login-input {
+  width: 100%; max-width: 320px;
+  background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.2);
+  border-radius: 14px; padding: 14px 18px; color: white;
+  font-family: 'Sarabun', sans-serif; font-size: 16px; outline: none;
+  margin-bottom: 14px; text-align: center;
+  transition: border-color .2s; -webkit-appearance: none;
+}
+.admin-login-input:focus { border-color: var(--turmeric); }
+.admin-login-input::placeholder { color: rgba(255,255,255,.3); }
+.admin-login-btn {
+  width: 100%; max-width: 320px; background: var(--turmeric);
+  color: var(--dark); border: none; border-radius: 14px; padding: 15px;
+  font-family: 'Sarabun', sans-serif; font-size: 16px; font-weight: 700;
+  cursor: pointer;
+}
+
+/* ─── TOAST ──────────────────────────────────────────── */
+.toast {
+  position: fixed; top: 18px; left: 50%; transform: translateX(-50%) translateY(-80px);
+  background: var(--dark); color: white; border-radius: 14px;
+  padding: 13px 20px; font-size: 14px; font-weight: 500;
+  z-index: 9999; transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 8px 28px rgba(0,0,0,.25); white-space: nowrap;
+  pointer-events: none;
+}
+.toast.visible { transform: translateX(-50%) translateY(0); }
+.toast.success { background: var(--green); }
+.toast.warning { background: var(--turmeric); color: var(--dark); }
+.toast.error { background: #DC2626; }
+
+/* ─── MODAL ──────────────────────────────────────────── */
+.modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.65); z-index: 200;
+  align-items: flex-end; justify-content: center;
+  padding: 0 0 0;
+}
+.modal-bg.open { display: flex; }
+.modal-box {
+  background: white; border-radius: 28px 28px 0 0; padding: 32px 24px 40px;
+  width: 100%; max-width: 480px; text-align: center;
+  animation: sheetUp .3s ease;
+}
+@keyframes sheetUp {
+  from { transform: translateY(80px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal-emoji { font-size: 56px; margin-bottom: 16px; }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 8px; }
+.modal-sub { color: var(--mid); font-size: 15px; line-height: 1.6; margin-bottom: 28px; }
+.modal-close { background: none; border: none; position: absolute; top: 16px; right: 20px; font-size: 22px; cursor: pointer; color: var(--mid); }
+
+/* ─── LOADING ─────────────────────────────────────────── */
+.spinner {
+  width: 36px; height: 36px; border: 3px solid var(--light);
+  border-top-color: var(--chili); border-radius: 50%;
+  animation: spin .7s linear infinite; margin: 32px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- REWARD MODAL -->
+<div class="modal-bg" id="rewardModal">
+  <div class="modal-box" style="position:relative">
+    <button class="modal-close" onclick="closeModal('rewardModal')">✕</button>
+    <div class="modal-emoji">🎉</div>
+    <div class="modal-title">ยินดีด้วย!</div>
+    <div class="modal-sub">คุณสะสม <strong>10 stamps</strong> ครบแล้วค่ะ!<br>รับ <strong>Thai Tea ฟรี 1 แก้ว</strong> ได้เลย 🧋</div>
+    <button class="btn btn-primary" onclick="closeModal('rewardModal')">ขอบคุณค่ะ 🙏</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     LANDING
+═══════════════════════════════════════ -->
+<div class="screen active" id="screen-landing">
+  <div class="landing-emoji">🍜</div>
+  <div class="landing-title">Pad Thai Cafe<br>Loyalty Card</div>
+  <div class="landing-sub">สะสม stamp ทุกการสั่งซื้อ<br>ครบ 10 ครั้ง รับ Thai Tea ฟรี!</div>
+
+  <div class="preview-card">
+    <div class="preview-label">ตัวอย่าง Stamp Card</div>
+    <div class="preview-dots" id="previewDots"></div>
+    <div class="preview-reward">ครบ 10 stamps → Thai Tea ฟรี ☕</div>
+  </div>
+
+  <div class="landing-btns">
+    <button class="btn btn-primary" onclick="show('screen-login')">เข้าสู่ระบบ</button>
+    <button class="btn btn-ghost" onclick="show('screen-register')">สมัครสมาชิกใหม่</button>
+    <button class="admin-link" onclick="show('screen-admin-login')">🔑 Admin เข้าระบบร้าน</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     LOGIN
+═══════════════════════════════════════ -->
+<div class="screen" id="screen-login">
+  <div class="topbar">
+    <div><div class="topbar-title">เข้าสู่ระบบ</div></div>
+    <button class="topbar-btn" onclick="show('screen-landing')">← กลับ</button>
+  </div>
+  <div class="form-wrap">
+    <div class="form-title">ยินดีต้อนรับ 👋</div>
+    <div class="form-subtitle">เข้าสู่ระบบเพื่อดู stamp card ของคุณ</div>
+    <div class="error-msg" id="loginError"></div>
+    <div class="field"><label>เบอร์โทรศัพท์</label><input type="tel" id="loginPhone" placeholder="081-234-5678" autocomplete="tel"></div>
+    <div class="field"><label>รหัสผ่าน</label><input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password"></div>
+    <button class="btn btn-primary" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <div class="form-switch">ยังไม่มีบัญชี? <a onclick="show('screen-register')">สมัครที่นี่</a></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     REGISTER
+═══════════════════════════════════════ -->
+<div class="screen" id="screen-register">
+  <div class="topbar">
+    <div><div class="topbar-title">สมัครสมาชิก</div></div>
+    <button class="topbar-btn" onclick="show('screen-login')">← กลับ</button>
+  </div>
+  <div class="form-wrap">
+    <div class="form-title">สมัครสมาชิก ✨</div>
+    <div class="form-subtitle">สมัครฟรี สะสม stamp ได้เลย ไม่ต้องพิมพ์บัตร</div>
+    <div class="error-msg" id="regError"></div>
+    <div class="field"><label>ชื่อของคุณ</label><input type="text" id="regName" placeholder="เช่น สมหญิง" autocomplete="name"></div>
+    <div class="field"><label>เบอร์โทรศัพท์</label><input type="tel" id="regPhone" placeholder="081-234-5678" autocomplete="tel"></div>
+    <div class="field"><label>รหัสผ่าน (อย่างน้อย 4 ตัว)</label><input type="password" id="regPass" placeholder="ตั้งรหัสผ่าน" autocomplete="new-password"></div>
+    <button class="btn btn-primary" id="regBtn" onclick="doRegister()">สมัครสมาชิก</button>
+    <div class="form-switch">มีบัญชีแล้ว? <a onclick="show('screen-login')">เข้าสู่ระบบ</a></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     CUSTOMER HOME
+═══════════════════════════════════════ -->
+<div class="screen" id="screen-customer">
+  <div class="topbar">
+    <div><div class="topbar-title">Pad Thai Cafe</div><div class="topbar-sub">Loyalty Card</div></div>
+    <button class="topbar-btn" onclick="doLogout()">ออกจากระบบ</button>
+  </div>
+  <div class="scroll-body">
+
+    <div class="loyalty-card" id="loyaltyCard">
+      <div class="lc-label">สมาชิก</div>
+      <div class="lc-name" id="lcName">—</div>
+      <div class="stamps-grid" id="stampsGrid"></div>
+      <div class="lc-progress" id="lcProgress">0 / 10 stamps</div>
+      <div class="lc-reward-bar" id="lcRewardBar">🧋 ครบ 10 stamps: Thai Tea ฟรี 1 แก้ว</div>
+    </div>
+
+    <div class="section-label">ทำรายการ</div>
+    <div class="tiles">
+      <div class="tile" onclick="show('screen-qr')">
+        <div class="tile-icon">📱</div>
+        <div class="tile-label">QR Code ของฉัน</div>
+        <div class="tile-sub">ให้แคชเชียร์สแกน</div>
+      </div>
+      <div class="tile" onclick="checkMyReward()">
+        <div class="tile-icon">🎁</div>
+        <div class="tile-label">รางวัลของฉัน</div>
+        <div class="tile-sub">ตรวจสอบสิทธิ์</div>
+      </div>
+    </div>
+
+    <div class="section-label">ประวัติการสะสม</div>
+    <div id="historyContainer"><div class="spinner"></div></div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     QR CODE
+═══════════════════════════════════════ -->
+<div class="screen" id="screen-qr">
+  <div class="topbar topbar-dark">
+    <div><div class="topbar-title">QR Code ของฉัน</div></div>
+    <button class="topbar-btn" onclick="show('screen-customer')">← กลับ</button>
+  </div>
+  <div class="qr-body">
+    <div class="qr-hint">แสดง QR Code นี้ให้แคชเชียร์สแกน<br>เพื่อรับ stamp (หมดอายุใน 5 นาที)</div>
+    <div class="qr-frame">
+      <img id="qrImage" style="display:none; width:100%; border-radius:8px;" alt="QR Code">
+      <div class="qr-loading" id="qrLoading">กำลังสร้าง QR...</div>
+    </div>
+    <div class="qr-name" id="qrName">—</div>
+    <div class="qr-id" id="qrId">—</div>
+    <div class="qr-counter" id="qrCounter">🍜 — / 10 Stamps</div>
+    <div class="qr-note">QR จะรีเฟรชอัตโนมัติทุก 5 นาที</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ADMIN LOGIN
+═══════════════════════════════════════ -->
+<div class="screen" id="screen-admin-login">
+  <div class="admin-login-wrap">
+    <div class="admin-login-icon">🔑</div>
+    <div class="admin-login-title">Admin Panel</div>
+    <div class="admin-login-sub">Pad Thai Cafe</div>
+    <div class="error-msg" id="adminLoginError" style="display:none; max-width:320px; margin-bottom:16px;"></div>
+    <input type="password" class="admin-login-input" id="adminPass" placeholder="รหัสผ่าน Admin" autocomplete="current-password">
+    <button class="admin-login-btn" onclick="doAdminLogin()">เข้าสู่ระบบ Admin</button>
+    <button style="margin-top:16px; background:none; border:none; color:rgba(255,255,255,.4); font-size:13px; cursor:pointer;" onclick="show('screen-landing')">← กลับหน้าแรก</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ADMIN DASHBOARD
+═══════════════════════════════════════ -->
+<div class="screen" id="screen-admin">
+  <div class="topbar">
+    <div><div class="topbar-title">Admin Panel</div><div class="topbar-sub">Pad Thai Cafe 🍜</div></div>
+    <button class="topbar-btn" onclick="adminLogout()">ออก</button>
+  </div>
+  <div class="admin-body">
+
+    <div class="stats-grid">
+      <div class="stat featured"><div class="stat-n" id="sTotalC">—</div><div class="stat-l">สมาชิกทั้งหมด</div></div>
+      <div class="stat"><div class="stat-n" id="sActive">—</div><div class="stat-l">ใช้งานแล้ว</div></div>
+      <div class="stat"><div class="stat-n" id="sRewards">—</div><div class="stat-l">แลกรางวัลแล้ว</div></div>
+      <div class="stat"><div class="stat-n" id="sToday">—</div><div class="stat-l">Stamps วันนี้</div></div>
+    </div>
+
+    <button class="admin-scan-btn" onclick="show('screen-scan')">📷 สแกน QR เพื่อให้ Stamp</button>
+
+    <div class="admin-section-label">สมาชิกทั้งหมด</div>
+    <div id="adminCustomers"><div class="spinner"></div></div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SCAN QR (Admin)
+═══════════════════════════════════════ -->
+<div class="screen" id="screen-scan">
+  <div class="topbar topbar-dark">
+    <div><div class="topbar-title">สแกน QR</div><div class="topbar-sub">ให้ลูกค้าแสดง QR Code</div></div>
+    <button class="topbar-btn" onclick="show('screen-admin'); hideScanResult();">← กลับ</button>
+  </div>
+  <div class="scan-body">
+
+    <!-- Scanner frame (visual only — real camera needs jsQR lib) -->
+    <div class="scan-frame" id="scanFrame">
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="scan-line"></div>
+      <div class="scan-icon">📷</div>
+    </div>
+
+    <!-- Manual input fallback -->
+    <div class="scan-hint">พิมพ์รหัสสมาชิก (เช่น PTF-0001)<br>หรือติดตั้ง jsQR สำหรับสแกนกล้องจริง</div>
+    <input class="scan-field" id="scanInput" type="text" placeholder="PTF-0001" autocomplete="off" autocapitalize="characters">
+    <button class="scan-confirm" onclick="doScan()">✅ ให้ Stamp</button>
+
+    <!-- Result card -->
+    <div class="scan-result" id="scanResult">
+      <div class="sr-emoji" id="srEmoji">🍜</div>
+      <div class="sr-name" id="srName">—</div>
+      <div class="sr-detail" id="srDetail">—</div>
+      <div class="sr-stamps" id="srDots"></div>
+      <button class="sr-btn" id="srRedeemBtn" style="display:none" onclick="doRedeem()">🎁 แลกรางวัล Thai Tea ฟรี</button>
+      <button class="sr-btn" style="background:var(--mid)" onclick="hideScanResult()">สแกนต่อ</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+// ── Config ────────────────────────────────────────────────
+// Change this to your real server URL after deploying
+const API = window.location.origin;
+const TOTAL = 10;
+
+// ── State ─────────────────────────────────────────────────
+let customerToken = localStorage.getItem('ptc_token') || null;
+let adminToken    = localStorage.getItem('ptc_admin_token') || null;
+let currentCustomer = null;
+let scanTargetId  = null;
+let qrRefreshTimer = null;
+
+// ── Navigation ────────────────────────────────────────────
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'screen-customer') loadCustomerData();
+  if (id === 'screen-qr') loadQR();
+  if (id === 'screen-admin') loadAdmin();
+  if (id === 'screen-landing') renderPreview();
+}
+
+// ── Init on load ──────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  renderPreview();
+  if (customerToken) {
+    show('screen-customer');
+  } else if (adminToken) {
+    show('screen-admin');
+  }
+});
+
+// ── Preview dots ──────────────────────────────────────────
+function renderPreview() {
+  const c = document.getElementById('previewDots');
+  c.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'preview-dot' + (i < 6 ? ' on' : '');
+    d.textContent = i < 6 ? '🍜' : '';
+    c.appendChild(d);
+  }
+}
+
+// ── API helper ────────────────────────────────────────────
+async function api(method, path, body, token) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+  };
+  if (token) opts.headers['Authorization'] = 'Bearer ' + token;
+  if (body)  opts.body = JSON.stringify(body);
+  const res  = await fetch(API + path, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'เกิดข้อผิดพลาด');
+  return data;
+}
+
+// ── Toast ─────────────────────────────────────────────────
+let toastTimer;
+function toast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type;
+  t.classList.add('visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('visible'), 3200);
+}
+
+// ── Modal ─────────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── Show / hide error ─────────────────────────────────────
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.style.display = 'block';
+}
+function hideError(id) { document.getElementById(id).style.display = 'none'; }
+
+// ── LOADING state for buttons ─────────────────────────────
+function setLoading(btnId, loading) {
+  const b = document.getElementById(btnId);
+  b.disabled = loading;
+  b.textContent = loading ? 'กำลังโหลด...' : b.dataset.label;
+}
+
+// ════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════
+async function doLogin() {
+  hideError('loginError');
+  const phone = document.getElementById('loginPhone').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  if (!phone || !pass) return showError('loginError', 'กรุณากรอกข้อมูลให้ครบ');
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'กำลังเข้าสู่ระบบ...';
+  try {
+    const data = await api('POST', '/api/login', { phone, password: pass });
+    customerToken = data.token;
+    currentCustomer = data.customer;
+    localStorage.setItem('ptc_token', data.token);
+    toast('✅ ยินดีต้อนรับ ' + data.customer.name, 'success');
+    show('screen-customer');
+  } catch (e) {
+    showError('loginError', e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'เข้าสู่ระบบ';
+  }
+}
+
+async function doRegister() {
+  hideError('regError');
+  const name  = document.getElementById('regName').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pass  = document.getElementById('regPass').value;
+  if (!name || !phone || !pass) return showError('regError', 'กรุณากรอกข้อมูลให้ครบ');
+  if (pass.length < 4) return showError('regError', 'รหัสผ่านต้องมีอย่างน้อย 4 ตัว');
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.textContent = 'กำลังสมัคร...';
+  try {
+    const data = await api('POST', '/api/register', { name, phone, password: pass });
+    customerToken = data.token;
+    currentCustomer = data.customer;
+    localStorage.setItem('ptc_token', data.token);
+    toast('🎉 สมัครสำเร็จ! ยินดีต้อนรับ ' + name, 'success');
+    show('screen-customer');
+  } catch (e) {
+    showError('regError', e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'สมัครสมาชิก';
+  }
+}
+
+function doLogout() {
+  customerToken = null; currentCustomer = null;
+  localStorage.removeItem('ptc_token');
+  toast('ออกจากระบบแล้ว');
+  show('screen-landing');
+}
+
+async function doAdminLogin() {
+  const pass = document.getElementById('adminPass').value;
+  const errEl = document.getElementById('adminLoginError');
+  errEl.style.display = 'none';
+  try {
+    const data = await api('POST', '/api/admin/login', { password: pass });
+    adminToken = data.token;
+    localStorage.setItem('ptc_admin_token', data.token);
+    toast('✅ เข้าสู่ระบบ Admin แล้ว', 'success');
+    show('screen-admin');
+  } catch (e) {
+    errEl.textContent = e.message; errEl.style.display = 'block';
+  }
+}
+
+function adminLogout() {
+  adminToken = null;
+  localStorage.removeItem('ptc_admin_token');
+  show('screen-landing');
+}
+
+// ════════════════════════════════════════
+//  CUSTOMER HOME
+// ════════════════════════════════════════
+async function loadCustomerData() {
+  try {
+    const data = await api('GET', '/api/me', null, customerToken);
+    currentCustomer = data.customer;
+    renderStampCard(data.customer);
+    renderHistory(data.customer.history || []);
+  } catch (e) {
+    if (e.message.includes('token')) { doLogout(); }
+  }
+}
+
+function renderStampCard(c) {
+  document.getElementById('lcName').textContent = c.name;
+  document.getElementById('lcProgress').textContent = c.stamps + ' / ' + TOTAL + ' stamps';
+
+  const bar = document.getElementById('lcRewardBar');
+  if (c.stamps >= TOTAL) {
+    bar.className = 'lc-reward-bar lc-complete';
+    bar.textContent = '🎉 ครบแล้ว! แสดง QR Code เพื่อแลกรางวัล';
+  } else {
+    bar.className = 'lc-reward-bar';
+    bar.textContent = '🧋 ครบ ' + TOTAL + ' stamps: Thai Tea ฟรี 1 แก้ว';
+  }
+
+  const grid = document.getElementById('stampsGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++) {
+    const s = document.createElement('div');
+    s.className = 'stamp ' + (i < c.stamps ? 'filled' : 'empty');
+    s.textContent = i < c.stamps ? '🍜' : '';
+    grid.appendChild(s);
+  }
+}
+
+function renderHistory(history) {
+  const el = document.getElementById('historyContainer');
+  if (!history.length) {
+    el.innerHTML = '<div class="history-empty">ยังไม่มีประวัติการสะสม<br>มาสะสม stamp กับเราได้เลย 🍜</div>';
+    return;
+  }
+  el.innerHTML = [...history].reverse().map(h => `
+    <div class="history-item">
+      <div class="history-icon">${h.type === 'reward' ? '🎁' : '🍜'}</div>
+      <div class="history-text">
+        <div class="history-main">${h.label}</div>
+        <div class="history-date">${h.date}</div>
+      </div>
+      <div class="badge ${h.type === 'reward' ? 'badge-reward' : ''}">${h.type === 'reward' ? 'รางวัล' : '+1'}</div>
+    </div>`).join('');
+}
+
+function checkMyReward() {
+  if (!currentCustomer) return;
+  if (currentCustomer.stamps >= TOTAL) {
+    openModal('rewardModal');
+  } else {
+    toast('🍜 ยังขาดอีก ' + (TOTAL - currentCustomer.stamps) + ' stamps ค่ะ');
+  }
+}
+
+// ════════════════════════════════════════
+//  QR CODE
+// ════════════════════════════════════════
+async function loadQR() {
+  clearTimeout(qrRefreshTimer);
+  document.getElementById('qrImage').style.display = 'none';
+  document.getElementById('qrLoading').style.display = 'block';
+
+  if (currentCustomer) {
+    document.getElementById('qrName').textContent = currentCustomer.name;
+    document.getElementById('qrId').textContent = 'รหัสสมาชิก: ' + currentCustomer.id;
+    document.getElementById('qrCounter').textContent = '🍜 ' + currentCustomer.stamps + ' / ' + TOTAL + ' Stamps';
+  }
+
+  try {
+    const data = await api('GET', '/api/qr', null, customerToken);
+    const img = document.getElementById('qrImage');
+    img.src = data.qr;
+    img.style.display = 'block';
+    document.getElementById('qrLoading').style.display = 'none';
+    // Auto-refresh every 4.5 minutes
+    qrRefreshTimer = setTimeout(loadQR, 4.5 * 60 * 1000);
+  } catch (e) {
+    document.getElementById('qrLoading').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+  }
+}
+
+// ════════════════════════════════════════
+//  ADMIN
+// ════════════════════════════════════════
+async function loadAdmin() {
+  try {
+    const [stats, customers] = await Promise.all([
+      api('GET', '/api/admin/stats', null, adminToken),
+      api('GET', '/api/admin/customers', null, adminToken)
+    ]);
+    document.getElementById('sTotalC').textContent  = stats.totalCustomers;
+    document.getElementById('sActive').textContent  = stats.activeCustomers;
+    document.getElementById('sRewards').textContent = stats.rewardsGiven;
+    document.getElementById('sToday').textContent   = stats.stampsToday;
+    renderAdminCustomers(customers.customers);
+  } catch (e) {
+    if (e.message.includes('token')) { adminLogout(); }
+  }
+}
+
+function renderAdminCustomers(customers) {
+  const el = document.getElementById('adminCustomers');
+  if (!customers.length) {
+    el.innerHTML = '<div style="text-align:center;color:var(--mid);padding:32px;font-size:14px;">ยังไม่มีสมาชิก</div>';
+    return;
+  }
+  el.innerHTML = customers.map(c => {
+    const dots = Array.from({length: TOTAL}, (_, i) =>
+      `<div class="mini-dot ${i < c.stamps ? 'on' : 'off'}"></div>`).join('');
+    const full = c.stamps >= TOTAL;
+    const btnClass = full ? 'stamp-btn redeem-btn' : 'stamp-btn';
+    const btnLabel = full ? '🎁 แลกรางวัล' : '+1 🍜';
+    const btnFn = full
+      ? `adminRedeem('${c.id}')`
+      : `adminStamp('${c.id}')`;
+    return `
+      <div class="cust-row" id="cust-${c.id}">
+        <div class="cust-avatar">${c.name[0]}</div>
+        <div class="cust-info">
+          <div class="cust-name">${c.name}</div>
+          <div class="cust-meta">${c.id} · ${c.phone}</div>
+          <div class="mini-bar">${dots}</div>
+        </div>
+        <button class="${btnClass}" onclick="${btnFn}">${btnLabel}</button>
+      </div>`;
+  }).join('');
+}
+
+async function adminStamp(id) {
+  try {
+    const data = await api('POST', '/api/admin/stamp', { customerId: id }, adminToken);
+    toast('✅ ให้ stamp ' + data.customer.name + ' แล้ว (' + data.customer.stamps + '/' + TOTAL + ')', 'success');
+    if (data.rewardEarned) setTimeout(() => toast('🎉 ' + data.customer.name + ' ครบ ' + TOTAL + ' stamps!', 'warning'), 500);
+    loadAdmin();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function adminRedeem(id) {
+  if (!confirm('ยืนยันแลกรางวัล Thai Tea ฟรี สำหรับสมาชิกนี้?')) return;
+  try {
+    const data = await api('POST', '/api/admin/redeem', { customerId: id }, adminToken);
+    toast('🎁 แลกรางวัลให้ ' + data.customer.name + ' เรียบร้อยแล้ว', 'success');
+    loadAdmin();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ════════════════════════════════════════
+//  SCAN
+// ════════════════════════════════════════
+async function doScan() {
+  const val = document.getElementById('scanInput').value.trim().toUpperCase();
+  if (!val) { toast('กรุณาพิมพ์รหัสสมาชิก', 'error'); return; }
+  // Support both manual ID (PTF-xxxx) and QR JSON payload
+  let payload;
+  if (val.startsWith('{')) {
+    payload = val; // QR payload
+  } else {
+    // Manual ID — wrap it as a fresh payload
+    payload = JSON.stringify({ id: val, t: Date.now() });
+  }
+  try {
+    const data = await api('POST', '/api/admin/scan', { qrPayload: payload }, adminToken);
+    scanTargetId = data.customer.id;
+    showScanResult(data.customer, data.rewardEarned);
+    document.getElementById('scanInput').value = '';
+    loadAdmin(); // refresh stats in background
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+function showScanResult(c, rewardEarned) {
+  document.getElementById('srEmoji').textContent = rewardEarned ? '🎉' : '🍜';
+  document.getElementById('srName').textContent = c.name;
+  document.getElementById('srDetail').textContent = rewardEarned
+    ? 'ครบ 10 stamps แล้ว! กดปุ่มด้านล่างเพื่อแลกรางวัล'
+    : 'ได้รับ stamp แล้ว — ' + c.stamps + ' / ' + TOTAL + ' stamps';
+
+  const dots = document.getElementById('srDots');
+  dots.innerHTML = Array.from({length: TOTAL}, (_, i) =>
+    `<div class="sr-dot ${i < c.stamps ? 'on' : 'off'}"></div>`).join('');
+
+  document.getElementById('srRedeemBtn').style.display = rewardEarned ? 'block' : 'none';
+  document.getElementById('scanFrame').style.display = 'none';
+  document.querySelector('.scan-hint').style.display = 'none';
+  document.querySelector('.scan-field').style.display = 'none';
+  document.querySelector('.scan-confirm').style.display = 'none';
+  document.getElementById('scanResult').classList.add('visible');
+}
+
+function hideScanResult() {
+  document.getElementById('scanFrame').style.display = 'flex';
+  document.querySelector('.scan-hint').style.display = 'block';
+  document.querySelector('.scan-field').style.display = 'block';
+  document.querySelector('.scan-confirm').style.display = 'block';
+  document.getElementById('scanResult').classList.remove('visible');
+  scanTargetId = null;
+}
+
+async function doRedeem() {
+  if (!scanTargetId) return;
+  try {
+    await api('POST', '/api/admin/redeem', { customerId: scanTargetId }, adminToken);
+    toast('🎁 แลกรางวัลเรียบร้อยแล้ว!', 'success');
+    hideScanResult();
+    loadAdmin();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const screen = document.querySelector('.screen.active')?.id;
+    if (screen === 'screen-login') doLogin();
+    else if (screen === 'screen-register') doRegister();
+    else if (screen === 'screen-scan') doScan();
+    else if (screen === 'screen-admin-login') doAdminLogin();
+  }
+});
+</script>
+</body>
+</html>
