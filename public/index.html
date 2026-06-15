@@ -469,7 +469,7 @@ body {
 <div class="screen active" id="screen-landing">
   <div class="landing-emoji"><img src="/logo.png" alt="Pad Thai Cafe" style="width:140px;filter:drop-shadow(0 4px 16px rgba(200,57,10,.35))"></div>
   <div class="landing-title">Pad Thai Cafe<br>Loyalty Card</div>
-  <div class="landing-sub">สะสม stamp ทุกการสั่งซื้อ<br>ครบ 10 ครั้ง รับ Thai Tea ฟรี!</div>
+  <div class="landing-sub">Earn a stamp with every purchase<br>Collect 10 stamps, get a free Thai Tea!</div>
 
   <div class="preview-card">
     <div class="preview-label">ตัวอย่าง Stamp Card</div>
@@ -479,7 +479,7 @@ body {
 
   <div class="landing-btns">
     <button class="btn btn-primary" onclick="show('screen-login')">เข้าสู่ระบบ</button>
-    <button class="btn btn-ghost" onclick="show('screen-register')">สมัครสมาชิกใหม่</button>
+    <button class="btn btn-ghost" onclick="show('screen-register')">Create Account</button>
     <button class="admin-link" onclick="show('screen-admin-login')">🔑 Admin เข้าระบบร้าน</button>
   </div>
 </div>
@@ -493,10 +493,10 @@ body {
     <button class="topbar-btn" onclick="show('screen-landing')">← กลับ</button>
   </div>
   <div class="form-wrap">
-    <div class="form-title">ยินดีต้อนรับ 👋</div>
+    <div class="form-title">Welcome back 👋</div>
     <div class="form-subtitle">เข้าสู่ระบบเพื่อดู stamp card ของคุณ</div>
     <div class="error-msg" id="loginError"></div>
-    <div class="field"><label>เบอร์โทรศัพท์</label><input type="tel" id="loginPhone" placeholder="081-234-5678" autocomplete="tel"></div>
+    <div class="field"><label>Phone number</label><input type="tel" id="loginPhone" placeholder="081-234-5678" autocomplete="tel"></div>
     <div class="field"><label>รหัสผ่าน</label><input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password"></div>
     <button class="btn btn-primary" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ</button>
     <div class="form-switch">ยังไม่มีบัญชี? <a onclick="show('screen-register')">สมัครที่นี่</a></div>
@@ -515,8 +515,8 @@ body {
     <div class="form-title">สมัครสมาชิก ✨</div>
     <div class="form-subtitle">สมัครฟรี สะสม stamp ได้เลย ไม่ต้องพิมพ์บัตร</div>
     <div class="error-msg" id="regError"></div>
-    <div class="field"><label>ชื่อของคุณ</label><input type="text" id="regName" placeholder="เช่น สมหญิง" autocomplete="name"></div>
-    <div class="field"><label>เบอร์โทรศัพท์</label><input type="tel" id="regPhone" placeholder="081-234-5678" autocomplete="tel"></div>
+    <div class="field"><label>Your name</label><input type="text" id="regName" placeholder="เช่น สมหญิง" autocomplete="name"></div>
+    <div class="field"><label>Phone number</label><input type="tel" id="regPhone" placeholder="081-234-5678" autocomplete="tel"></div>
     <div class="field"><label>รหัสผ่าน (อย่างน้อย 4 ตัว)</label><input type="password" id="regPass" placeholder="ตั้งรหัสผ่าน" autocomplete="new-password"></div>
     <button class="btn btn-primary" id="regBtn" onclick="doRegister()">สมัครสมาชิก</button>
     <div class="form-switch">มีบัญชีแล้ว? <a onclick="show('screen-login')">เข้าสู่ระบบ</a></div>
@@ -529,7 +529,7 @@ body {
 <div class="screen" id="screen-customer">
   <div class="topbar">
     <div><div class="topbar-title">Pad Thai Cafe</div><div class="topbar-sub">Loyalty Card</div></div>
-    <button class="topbar-btn" onclick="doLogout()">ออกจากระบบ</button>
+    <button class="topbar-btn" onclick="doLogout()">Logout</button>
   </div>
   <div class="scroll-body">
 
@@ -541,7 +541,7 @@ body {
       <div class="lc-reward-bar" id="lcRewardBar">🧋 ครบ 10 stamps: Thai Tea ฟรี 1 แก้ว</div>
     </div>
 
-    <div class="section-label">ทำรายการ</div>
+    <div class="section-label">Quick Actions</div>
     <div class="tiles">
       <div class="tile" onclick="show('screen-qr')">
         <div class="tile-icon">📱</div>
@@ -555,7 +555,7 @@ body {
       </div>
     </div>
 
-    <div class="section-label">ประวัติการสะสม</div>
+    <div class="section-label">Stamp History</div>
     <div id="historyContainer"><div class="spinner"></div></div>
 
   </div>
@@ -608,15 +608,15 @@ body {
   <div class="admin-body">
 
     <div class="stats-grid">
-      <div class="stat featured"><div class="stat-n" id="sTotalC">—</div><div class="stat-l">สมาชิกทั้งหมด</div></div>
-      <div class="stat"><div class="stat-n" id="sActive">—</div><div class="stat-l">ใช้งานแล้ว</div></div>
-      <div class="stat"><div class="stat-n" id="sRewards">—</div><div class="stat-l">แลกรางวัลแล้ว</div></div>
-      <div class="stat"><div class="stat-n" id="sToday">—</div><div class="stat-l">Stamps วันนี้</div></div>
+      <div class="stat featured"><div class="stat-n" id="sTotalC">—</div><div class="stat-l">Total Members</div></div>
+      <div class="stat"><div class="stat-n" id="sActive">—</div><div class="stat-l">Active</div></div>
+      <div class="stat"><div class="stat-n" id="sRewards">—</div><div class="stat-l">Rewards Given</div></div>
+      <div class="stat"><div class="stat-n" id="sToday">—</div><div class="stat-l">Stamps Today</div></div>
     </div>
 
     <button class="admin-scan-btn" onclick="show('screen-scan')">📷 สแกน QR เพื่อให้ Stamp</button>
 
-    <div class="admin-section-label">สมาชิกทั้งหมด</div>
+    <div class="admin-section-label">Total Members</div>
     <div id="adminCustomers"><div class="spinner"></div></div>
 
   </div>
@@ -801,7 +801,7 @@ async function doRegister() {
 function doLogout() {
   customerToken = null; currentCustomer = null;
   localStorage.removeItem('ptc_token');
-  toast('ออกจากระบบแล้ว');
+  toast('Logoutแล้ว');
   show('screen-landing');
 }
 
@@ -866,7 +866,7 @@ function renderStampCard(c) {
 function renderHistory(history) {
   const el = document.getElementById('historyContainer');
   if (!history.length) {
-    el.innerHTML = '<div class="history-empty">ยังไม่มีประวัติการสะสม<br>มาสะสม stamp กับเราได้เลย 🍜</div>';
+    el.innerHTML = '<div class="history-empty">ยังไม่มีStamp History<br>มาสะสม stamp กับเราได้เลย 🍜</div>';
     return;
   }
   el.innerHTML = [...history].reverse().map(h => `
@@ -938,7 +938,7 @@ async function loadAdmin() {
 function renderAdminCustomers(customers) {
   const el = document.getElementById('adminCustomers');
   if (!customers.length) {
-    el.innerHTML = '<div style="text-align:center;color:var(--mid);padding:32px;font-size:14px;">ยังไม่มีสมาชิก</div>';
+    el.innerHTML = '<div style="text-align:center;color:var(--mid);padding:32px;font-size:14px;">No members yet</div>';
     return;
   }
   el.innerHTML = customers.map(c => {
